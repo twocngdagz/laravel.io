@@ -12,7 +12,7 @@ class ForumThreadVisitationTimestampsCreateTable extends Migration
      */
     public function up()
     {
-        Schema::table('forum_thread_visitations', function(Blueprint $table) {
+        Schema::table('forum_thread_visitations', function (Blueprint $table) {
             $table->create();
             $table->increments('id');
             $table->integer('user_id');
@@ -20,15 +20,5 @@ class ForumThreadVisitationTimestampsCreateTable extends Migration
             $table->timestamp('visited_at');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('forum_thread_visitations');
     }
 }

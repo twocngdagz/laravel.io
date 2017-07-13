@@ -1,72 +1,69 @@
 # Laravel.io Community Portal
 
-<img src="https://travis-ci.org/laravelio/laravel.io.svg?branch=master" alt="Build Status">
-[![Code Climate](https://codeclimate.com/github/LaravelIO/laravel.io/badges/gpa.svg)](https://codeclimate.com/github/LaravelIO/laravel.io)
-[![Test Coverage](https://codeclimate.com/github/LaravelIO/laravel.io/badges/coverage.svg)](https://codeclimate.com/github/LaravelIO/laravel.io/coverage)
+[![Laravel Version](https://shield.with.social/cc/github/laravelio/portal/master.svg?style=flat-square)](https://packagist.org/packages/laravel/framework)
+[![Build Status](https://travis-ci.org/laravelio/portal.svg?branch=master)](https://travis-ci.org/laravelio/portal)
+[![StyleCI](https://styleci.io/repos/12895187/shield?branch=master)](https://styleci.io/repos/12895187)
+[![Code Climate](https://codeclimate.com/github/LaravelIO/laravel.io/badges/gpa.svg)](https://codeclimate.com/github/laravelio/portal)
+[![Test Coverage](https://codeclimate.com/github/LaravelIO/laravel.io/badges/coverage.svg)](https://codeclimate.com/github/laravelio/portal/coverage)
+[![Dependency Status](https://dependencyci.com/github/laravelio/portal/badge)](https://dependencyci.com/github/laravelio/portal)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](license.txt)
-<img src="https://insight.sensiolabs.com/projects/50a7431f-66b0-4221-8837-7ccf1924031e/mini.png" alt="SensioLabsInsight">
 
-This is the repository for the [Laravel.io](http://laravel.io) community portal. The code is entirely open source and licensed under [the MIT license](license.txt). Feel free to contribute to the portal by sending in a pull request.
+This is the repository for the [Laravel.io](http://laravel.io) community portal. The code is entirely open source and licensed under [the MIT license](license.txt). We welcome your contributions but we encourage you to read the [the contributing guide](contributing.md) before creating an issue or sending in a pull request. Read the installation guide below to get started with setting up the app on your machine.
+
+We hope to see your contribution soon!
 
 ## Table of Contents
 
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Configuration](#configuration)
-- [Frontend](#frontend)
 - [Maintainers](#maintainers)
 - [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
 - [License](#license)
 
 ## Requirements
 
-We use Laravel Homestead for local development. Please review [the Homestead documentation](http://laravel.com/docs/homestead) to install it.
+The following tools are required in order to start the installation.
 
-In order to compile stylesheets you will also need Ruby, Sass, and Compass installed.
+- [VirtualBox](https://www.virtualbox.org/)
+- [Vagrant](https://www.vagrantup.com/)
 
 ## Installation
 
-1. Clone this repository: `git clone git@github.com:laravelio/laravel-io.git laravelio/`
-2. Update your `Homestead.yml` with the following settings:
-    1. Add the path for the cloned laravel.io repository to the `folders` list
-    2. Add a site `lio.loc` for the laravel.io repository to the `sites` list
-    3. Add a database called `laravelio` to the `databases` list
-    4. Run `homestead provision`
-3. SSH into your Homestead box and run the following commands:
-    1. `composer install`
-    2. `php artisan migrate --seed --env=local`
-4. Add `192.168.10.10 lio.loc` to your computer's `hosts` file
-5. Follow the configuration steps below to configure the external services
+> Note that you're free to adjust the `~/Sites/laravelio` location to any directory you want on your machine.
 
-## Configuration
+1. Clone this repository: `git clone git@github.com:laravelio/laravel-io.git ~/Sites/laravelio`
+2. Run `composer start`
+4. Run `vagrant up`
+5. SSH into your Vagrant box, go to `/home/vagrant/Code/laravelio` and run `composer setup`
+6. Add `192.168.10.10 laravelio.app` to your computer's `/etc/hosts` file
+7. Setup a working e-mail driver like [Mailtrap](https://mailtrap.io/)
+8. (optional) Set up Github authentication (see below)
 
-Laravel.io relies on some key services to function, namely Github OAuth authentication and the Google ReCaptcha service. Follow the steps below to fill in the credentials in your custom `.env` file.
+You can now visit the app in your browser by visiting [http://laravelio.app](http://laravelio.app). If you seeded the database you can login into a test account with `johndoe` & `password`.
 
-1. [Create an application](https://github.com/settings/applications) in your github account called something like "Laravel.io Development" and add your Github application's client id, secret and url to the `.env` file. Your GitHub application should be set up as follows.
+### Github Authentication (optional)
 
-    Full URL: http://lio.loc  
-    Callback URL: http://lio.loc/auth/github
+To get Github authentication to work locally, you'll need to [register a new OAuth application on Github](https://github.com/settings/applications/new). Use `http://lio.app` for the homepage url and `http://lio.app/auth/github` for the callback url. When you've created the app, fill in the ID and secret in your `.env` file in the env variables below. You should now be able to authentication with Github.
 
-2. [Register a new website](https://www.google.com/recaptcha/admin) for the Google ReCaptcha service and fill in the site key and secret key in the `.env` file.
-
-You can now visit the app in your browser by visiting [http://lio.loc/](http://lio.loc).
-
-## Frontend
-
-Because we keep the generated / minified css out of the repository, we must have a workflow for compiling the styles.
-
-- To compile stylesheets, we'll need [Compass](http://compass-style.org/). Install Compass by running `sudo apt-get install ruby-compass` when ssh'd into your Homestead box.
-- When running any Compass command in the terminal, be sure to run it from your `/public` folder.
-- Compass is the tool used to compile Sass source files into CSS files; you can run `compass compile` to run it once, or `compass watch` to trigger a script that will watch your Sass files for changes and trigger a new compass compile on each change
+```
+GITHUB_ID=
+GITHUB_SECRET=
+GITHUB_URL=http://laravelio.app/auth/github
+```
 
 ## Maintainers
 
-The Laravel.io portal is currently maintained by [Dries Vints](https://github.com/driesvints). If you have any questions please don't hesitate to contact us through the support widget on the [Laravel.io](http://laravel.io/) website.
+The Laravel.io portal is currently maintained by [Dries Vints](https://github.com/driesvints). If you have any questions please don't hesitate to create an issue on this repo or ask us through the #laravelio channel on [Slack](https://larachat.slack.com).
 
 ## Contributing
 
-Please see [the contributing guide](contributing.md) for details.
+Please read [the contributing guide](contributing.md) before creating an issue or sending in a pull request.
+
+## Code of Conduct
+
+Please read our [Code of Conduct](code_of_conduct.md) before contributing or engaging in discussions.
 
 ## Security Vulnerabilities
 

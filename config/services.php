@@ -8,31 +8,31 @@ return [
     |--------------------------------------------------------------------------
     |
     | This file is for storing the credentials for third party services such
-    | as Stripe, Mailgun, Mandrill, and others. This file provides a sane
+    | as Stripe, Mailgun, SparkPost and others. This file provides a sane
     | default location for this type of information, allowing packages
     | to have a conventional place to find your various credentials.
     |
     */
 
     'mailgun' => [
-        'domain' => '',
-        'secret' => '',
-    ],
-
-    'mandrill' => [
-        'secret' => env('MANDRILL_API_KEY'),
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET'),
     ],
 
     'ses' => [
-        'key'    => '',
-        'secret' => '',
+        'key' => env('SES_KEY'),
+        'secret' => env('SES_SECRET'),
         'region' => 'us-east-1',
     ],
 
+    'sparkpost' => [
+        'secret' => env('SPARKPOST_SECRET'),
+    ],
+
     'stripe' => [
-        'model'  => Lio\Accounts\User::class,
-        'key'    => '',
-        'secret' => '',
+        'model' => App\User::class,
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
     ],
 
     'github' => [
@@ -41,11 +41,22 @@ return [
         'redirect' => env('GITHUB_URL'),
     ],
 
-    'snappy' => [
-        'enabled' => env('SNAPPY_ENABLED', false),
-        'debug' => env('SNAPPY_DEBUG', false),
-        'embed_url' => env('SNAPPY_EMBED_URL'),
-        'domain' => env('SNAPPY_DOMAIN'),
+    'akismet' => [
+        'api_key' => env('AKISMET_API_KEY'),
+    ],
+
+    'intercom' => [
+        'app_id' => env('INTERCOM_APP_ID'),
+        'secret' => env('INTERCOM_SECRET'),
+    ],
+
+    'google' => [
+        'ad_sense' => [
+            'enabled' => env('GOOGLE_AD_SENSE_ENABLED', false),
+            'client' => env('GOOGLE_AD_SENSE_AD_CLIENT'),
+            'unit_footer' => env('GOOGLE_AD_SENSE_UNIT_FOOTER'),
+            'unit_forum_sidebar' => env('GOOGLE_AD_SENSE_UNIT_FORUM_SIDEBAR'),
+        ],
     ],
 
 ];

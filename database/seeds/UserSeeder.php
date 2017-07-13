@@ -1,22 +1,17 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
-use Lio\Accounts\User;
 
 class UserSeeder extends Seeder
 {
     public function run()
     {
-        if (User::count() == 0) {
-            $this->createUsers();
-        }
-    }
-
-    private function createUsers()
-    {
-        User::create([
-            'email' => 'account@account.com',
-            'name' => 'Big Ole User Name',
+        factory(User::class)->create([
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'username' => 'johndoe',
+            'password' => bcrypt('password'),
         ]);
     }
 }

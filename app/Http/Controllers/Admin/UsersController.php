@@ -1,90 +1,58 @@
 <?php
-namespace Lio\Http\Controllers\Admin;
 
-use Auth;
-use Input;
-use Lio\Accounts\UserRepository;
-use Lio\Accounts\RoleRepository;
-use Lio\Forum\Threads\ThreadRepository;
-use Lio\Http\Controllers\Controller;
+namespace App\Http\Controllers\Admin;
+
+use App\User;
+use App\Jobs\BanUser;
+use App\Jobs\UnbanUser;
+use App\Jobs\DeleteUser;
+use App\Policies\UserPolicy;
+use App\Http\Controllers\Controller;
+use App\Http\Middleware\VerifyAdmins;
+use Illuminate\Auth\Middleware\Authenticate;
 
 class UsersController extends Controller
 {
-    /**
-     * @var \Lio\Accounts\UserRepository
-     */
-    private $users;
-
-    /**
-     * @var \Lio\Accounts\RoleRepository
-     */
-    private $roles;
-
-    /**
-     * @var \Lio\Forum\Threads\ThreadRepository
-     */
-    private $threads;
-
-    public function __construct(UserRepository $users, RoleRepository $roles, ThreadRepository $threads)
+    public function __construct()
     {
-        $this->users = $users;
-        $this->roles = $roles;
-        $this->threads = $threads;
+        $this->middleware([Authenticate::class, VerifyAdmins::class]);
     }
 
-    public function getIndex()
+    public function show(User $user)
     {
-        $users = $this->users->getAllPaginated(100);
-
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.show', compact('user'));
     }
 
-    public function search()
+    public function ban(User $user)
     {
-        $users = $this->users->search(Input::get('q'));
+        $this->authorize(UserPolicy::BAN, $user);
 
-        return view('admin.users.index', compact('users'));
+        $this->dispatchNow(new BanUser($user));
+
+        $this->success('admin.users.banned', $user->name());
+
+        return redirect()->route('admin.users.show', $user->username());
     }
 
-    public function getEdit($userId)
+    public function unban(User $user)
     {
-        $user  = $this->users->requireById($userId);
-        $roles = $this->roles->getAll();
+        $this->authorize(UserPolicy::BAN, $user);
 
-        return view('admin.users.edit', compact('user', 'roles'));
+        $this->dispatchNow(new UnbanUser($user));
+
+        $this->success('admin.users.unbanned', $user->name());
+
+        return redirect()->route('admin.users.show', $user->username());
     }
 
-    public function postEdit($userId)
+    public function delete(User $user)
     {
-        $user = $this->users->requireById($userId);
+        $this->authorize(UserPolicy::DELETE, $user);
 
-        $user->fill(Input::all());
+        $this->dispatchNow(new DeleteUser($user));
 
-        if (! Input::has('is_banned')) {
-            $user->is_banned = 0;
-        }
+        $this->success('admin.users.deleted', $user->name());
 
-        if (! $user->isValid()) {
-            return $this->redirectBack(['errors' => $user->getErrors()]);
-        }
-
-        $this->users->save($user);
-        $user->roles = Input::get('roles');
-
-        return $this->redirectAction('Admin\UsersController@getIndex', ['success' => 'The user has been saved.']);
-    }
-
-    public function putBanAndDeleteThreads($userId)
-    {
-        // Ban the user
-        $user = $this->users->requireById($userId);
-        $user->is_banned = 1;
-
-        $this->users->save($user);
-
-        // Remove all threads by the user
-        $this->threads->deleteByAuthorId($userId);
-
-        return $this->redirectAction('Admin\UsersController@getIndex', ['success' => 'The user has been banned and its threads have been removed.']);
+        return redirect()->route('admin');
     }
 }

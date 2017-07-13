@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class AddSoftDeleteToArticles extends Migration
 {
@@ -12,20 +12,8 @@ class AddSoftDeleteToArticles extends Migration
      */
     public function up()
     {
-        Schema::table('articles', function(Blueprint $table) {
+        Schema::table('articles', function (Blueprint $table) {
             $table->softDeletes();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('articles', function(Blueprint $table) {
-            $table->dropSoftDeletes();
         });
     }
 }

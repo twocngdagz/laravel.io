@@ -12,20 +12,8 @@ class ForumThreadsAddSolutionReplyId extends Migration
      */
     public function up()
     {
-        Schema::table('forum_threads', function(Blueprint $table) {
-           $table->integer('solution_reply_id')->nullable()->default(null);
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('forum_threads', function(Blueprint $table) {
-            $table->dropColumn('solution_reply_id');
+        Schema::table('forum_threads', function (Blueprint $table) {
+            $table->integer('solution_reply_id')->nullable()->default(null);
         });
     }
 }
